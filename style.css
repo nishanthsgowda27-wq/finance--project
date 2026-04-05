@@ -1,0 +1,43 @@
+body {
+    font-family: 'Segoe UI';
+    margin:0;
+    background: linear-gradient(to right,#141e30,#243b55);
+    color:white;
+}
+
+.header {
+    text-align:center;
+    padding:20px;
+    animation:move 3s infinite alternate;
+}
+
+@keyframes move {
+    from {letter-spacing:2px;}
+    to {letter-spacing:10px;}
+}
+
+.container {
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    gap:20px;
+    padding:20px;
+}
+
+.card {
+    background:white;
+    color:black;
+    padding:15px;
+    border-radius:10px;
+}
+
+input,select,button {
+    width:100%;
+    padding:10px;
+    margin:5px 0;
+}
+
+button {
+    background:#007bff;
+    color:white;
+    border:none;
+}

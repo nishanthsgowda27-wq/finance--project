@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="header">🔐 AI TAX & FINANCE AGENT</div>
+
+<div class="card" style="max-width:400px;margin:auto">
+
+<input id="acc" placeholder="Account">
+<input id="pass" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+<h3>Register</h3>
+<input id="name">
+<input id="racc">
+<input id="rpass">
+
+<button onclick="register()">Register</button>
+
+<p id="msg"></p>
+
+</div>
+
+<script>
+function login(){
+fetch('/api/login',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({account:acc.value,password:pass.value})
+})
+.then(r=>r.json())
+.then(d=>{
+if(d.success) window.location="dashboard.html";
+else msg.innerText="Login Failed";
+});
+}
+
+function register(){
+fetch('/api/register',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({name:name.value,account:racc.value,password:rpass.value})
+})
+.then(()=>msg.innerText="Registered");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Finance Dashboard</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body { background:#0f172a; color:white; }
+
+.card {
+    background:#1f2937;
+    padding:15px;
+    border-radius:10px;
+    margin:10px;
+}
+
+button {
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:10px;
+    margin-top:5px;
+    border-radius:5px;
+}
+
+input,select {
+    width:100%;
+    padding:8px;
+    margin:5px 0;
+}
+</style>
+</head>
+
+<body>
+
+<h2 style="text-align:center">💰 AI Finance Dashboard</h2>
+
+<div class="container">
+
+<!-- INCOME -->
+<div class="card">
+<h3>Income</h3>
+<input id="yearIncome" placeholder="Enter Yearly Income ₹">
+<select id="job">
+<option value="govt">Government</option>
+<option value="business">Business</option>
+<option value="farmer">Farmer</option>
+</select>
+<button onclick="calculateMonthly()">Calculate Monthly</button>
+<p id="monthlyOut"></p>
+</div>
+
+<!-- TAX -->
+<div class="card">
+<h3>Tax Calculation</h3>
+<button onclick="tax()">Calculate Tax</button>
+<p id="taxOut"></p>
+</div>
+
+<!-- LOAN -->
+<div class="card">
+<h3>Loan Suggestion</h3>
+<button onclick="loan()">Check Loan</button>
+<p id="loanOut"></p>
+</div>
+
+<!-- FD -->
+<div class="card">
+<h3>FD</h3>
+<input id="fdAmount" placeholder="Enter Amount (optional)">
+<input id="fdRate" placeholder="Rate %">
+<input id="fdYears" placeholder="Years">
+<button onclick="fd()">Calculate FD</button>
+<p id="fdOut"></p>
+</div>
+
+<!-- VEHICLE -->
+<div class="card">
+<h3>Vehicle Suggestion</h3>
+<button onclick="vehicle()">Suggest</button>
+<p id="veh"></p>
+<img id="carImg" width="100%">
+<img id="bikeImg" width="100%">
+</div>
+
+<!-- DAILY EXPENSE -->
+<div class="card">
+<h3>Daily Expense Entry (1 Month)</h3>
+<input id="day" placeholder="Day (1-30)">
+<input id="amount" placeholder="Amount ₹">
+<select id="category">
+<option>Food</option>
+<option>Travel</option>
+<option>Rent</option>
+<option>Shopping</option>
+<option>Other</option>
+</select>
+<button onclick="addExpense()">Add</button>
+<p id="log"></p>
+</div>
+
+<!-- GRAPH FILTER -->
+<div class="card">
+<h3>Graph</h3>
+<select id="range">
+<option value="1">1 Day</option>
+<option value="7">7 Days</option>
+<option value="30">30 Days</option>
+</select>
+<button onclick="showGraph()">Show Graph</button>
+<canvas id="chart"></canvas>
+</div>
+
+</div>
+
+<script>
+let monthlyIncome=0;
+let expenses=[];
+
+// MONTHLY
+function calculateMonthly(){
+let yearly=Number(yearIncome.value);
+monthlyIncome=yearly/12;
+monthlyOut.innerText="Monthly Income ₹"+monthlyIncome.toFixed(0);
+}
+
+// TAX (YOUR LOGIC)
+function tax(){
+let y=Number(yearIncome.value);
+
+let tax=0;
+if(y<400000) tax=0;
+else if(y<=800000) tax=y*0.03;
+else if(y<=1200000) tax=y*0.05;
+else tax=y*0.10;
+
+taxOut.innerText="Yearly Tax ₹"+tax+" | Monthly ₹"+(tax/12).toFixed(0);
+}
+
+// LOAN (FORMAL)
+function loan(){
+let job=job.value;
+let msg="";
+
+if(job=="govt"){
+msg="Eligible for Home Loan, Car Loan, Personal Loan (High approval rate)";
+}
+else if(job=="business"){
+msg="Eligible for MSME Loan, Business Expansion Loan";
+}
+else{
+msg="Eligible for Agriculture Loan, Crop Loan (Gov schemes)";
+}
+
+loanOut.innerText=msg;
+}
+
+// FD
+function fd(){
+let amount=Number(fdAmount.value)||monthlyIncome*0.2;
+let rate=Number(fdRate.value)||7;
+let years=Number(fdYears.value)||2;
+
+let maturity=amount*Math.pow(1+rate/100,years);
+
+fdOut.innerText="Invest ₹"+amount+" → ₹"+maturity.toFixed(0);
+}
+
+// VEHICLE
+function vehicle(){
+if(monthlyIncome<30000){
+veh.innerText="Bike: Hero Splendor (EMI ₹2000)";
+bikeImg.src="https://images.unsplash.com/photo-1580310614729-ccd69652491d";
+}
+else{
+veh.innerText="Car: Tata Punch (EMI ₹12000)\nBike: TVS Apache (EMI ₹4000)";
+carImg.src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2";
+bikeImg.src="https://images.unsplash.com/photo-1580310614729-ccd69652491d";
+}
+}
+
+// ADD DAILY EXPENSE
+function addExpense(){
+let d=Number(day.value);
+let a=Number(amount.value);
+
+expenses.push({day:d,amount:a});
+log.innerText="Added Day "+d+" ₹"+a;
+}
+
+// GRAPH
+let chart;
+function showGraph(){
+let r=Number(range.value);
+
+let data=expenses.filter(x=>x.day<=r).map(x=>x.amount);
+
+if(chart) chart.destroy();
+
+chart=new Chart(document.getElementById("chart"),{
+type:'bar',
+data:{
+labels:data.map((_,i)=>i+1),
+datasets:[{label:'Expense ₹',data:data}]
+}
+});
+}
+</script>
+
+</body>
+</html>
